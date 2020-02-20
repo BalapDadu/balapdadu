@@ -20,7 +20,7 @@ export default {
     return {
       form: {
         name: '',
-        score: 0
+        score: 0,
       },
       players: [],
       activePlayer: null,
