@@ -1,11 +1,25 @@
 <template>
   <div class="home">
-    <button @click="run" class="btn btn-secondary">Run</button>
-    <img :style="{left:`${position}%`}" src="../assets/itachi.gif" id="mario">
-    <img src="../assets/sasuke.gif" id="yoshi">
+    <!-- add players -->
+    <div>
+      <form @submit.prevent="addPlayer">
+        <input type="text" v-model="form.name">
+        <button type="submit">Tambah Player</button>
+      </form>
+      <br>
+      <h2 v-if="value > 0">Dapat Angka : {{ value }}</h2>
+      <div v-if="players != null">
+        <div :key="i" v-for="(player, i) in players">
+          <h2>Player {{ player.name }} : {{ player.score }}</h2>
+          <button v-if="turn === i" @click.stop="kocokDadu">Kocok Dadu</button>
+        </div>
+      </div>
+  </div>
+
+    <img :style="{left:`${positionOne}%`}" src="../assets/itachi.gif" id="mario">
+    <img :style="{left:`${positionTwo}%`}" src="../assets/sasuke.gif" id="yoshi">
     <img src="../assets/sharingan.gif" id="sharingan">
-    <img v-if="position === 49" src="../assets/kakashi.gif" id="kakashi">
-    <img v-if="position === 49" src="../assets/smoke.gif" id="smoke">
+    <img v-if="positionOne === 49 || positionTwo === 49 " src="../assets/kakashi.gif" id="kakashi">
   </div>
 </template>
 
@@ -18,8 +32,62 @@ export default {
   },
   data () {
     return {
-      position: 0
+      form: {
+        name: '',
+        score: 0
+      },
+      players: [],
+      turn: 0,
+      value: 0
     }
+  },
+  computed: {
+    positionOne: function () {
+      if (this.players.length === 0) {
+        return 0
+      } else {
+        return this.players[0].score
+      }
+    },
+    positionTwo: function () {
+      if (this.players.length === 0) {
+        return 0
+      } else {
+        return this.players[1].score
+      }
+    }
+  },
+  watch: {
+    positionOne (newVal, oldVal) {
+      console.log('ini score player satu di watch')
+      console.log(newVal)
+      if (this.players[0].score === 49) {
+        setTimeout(() => {
+          this.players[0].score -= 15
+        }, 1200)
+      }
+    },
+    positionTwo: function (newVal, oldVal) {
+      console.log('ini score player dua di watch')
+      console.log(newVal)
+      if (newVal === 49) {
+        setTimeout(() => {
+          this.players[1].score -= 15
+        }, 1200)
+      }
+    }
+  },
+  mounted () {
+    this.$socket.on('player', (object) => {
+      this.players.push(object)
+    })
+    this.$socket.on('dadu', (object) => {
+      console.log(`ini score player ${object.turn} di mounted : ` + this.players[object.turn].score)
+      this.turn = object.turn === 0 ? 1 : 0
+      console.log(this.players[object.turn].score)
+      this.players[object.turn].score += object.value
+      this.value = object.value
+    })
   },
   methods: {
     run () {
@@ -37,6 +105,14 @@ export default {
           this.position -= 15
         }, 2500)
       }
+    },
+    kocokDadu () {
+      const value = Math.floor(Math.random()*6)+
+      this.value = value
+      this.$socket.emit('dadu', { turn: this.turn, value: this.value })
+    },
+    addPlayer () {
+      this.$socket.emit('player', { ...this.form })
     }
   }
 }
