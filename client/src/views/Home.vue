@@ -10,16 +10,17 @@
       <h2 v-if="value > 0">Dapat Angka : {{ value }}</h2>
       <div v-if="players != null">
         <div :key="i" v-for="(player, i) in players">
+          <img :style="{left:`${player.score}%`}" :src="i === 0 ? imgUrl.itachi : imgUrl.sasuke " :id="i === 0 ? 'mario' : 'yoshi' ">
           <h2>Player {{ player.name }} : {{ player.score }}</h2>
           <button v-if="turn === i" @click.stop="kocokDadu">Kocok Dadu</button>
+          <img v-if="player.score === 49" src="../assets/kakashi.gif" id="kakashi">
         </div>
       </div>
   </div>
 
-    <img :style="{left:`${positionOne}%`}" src="../assets/itachi.gif" id="mario">
+    <!-- <img :style="{left:`${positionOne}%`}" src="../assets/itachi.gif" id="mario">
     <img :style="{left:`${positionTwo}%`}" src="../assets/sasuke.gif" id="yoshi">
-    <img src="../assets/sharingan.gif" id="sharingan">
-    <img v-if="positionOne === 49 || positionTwo === 49 " src="../assets/kakashi.gif" id="kakashi">
+    <img src="../assets/sharingan.gif" id="sharingan"> -->
   </div>
 </template>
 
@@ -38,42 +39,10 @@ export default {
       },
       players: [],
       turn: 0,
-      value: 0
-    }
-  },
-  computed: {
-    positionOne: function () {
-      if (this.players.length === 0) {
-        return 0
-      } else {
-        return this.players[0].score
-      }
-    },
-    positionTwo: function () {
-      if (this.players.length === 0) {
-        return 0
-      } else {
-        return this.players[1].score
-      }
-    }
-  },
-  watch: {
-    positionOne (newVal, oldVal) {
-      console.log('ini score player satu di watch')
-      console.log(newVal)
-      if (this.players[0].score === 49) {
-        setTimeout(() => {
-          this.players[0].score -= 15
-        }, 1200)
-      }
-    },
-    positionTwo: function (newVal, oldVal) {
-      console.log('ini score player dua di watch')
-      console.log(newVal)
-      if (newVal === 49) {
-        setTimeout(() => {
-          this.players[1].score -= 15
-        }, 1200)
+      value: 0,
+      imgUrl: {
+        sasuke: require('@/assets/sasuke.gif'),
+        itachi: require('@/assets/itachi.gif')
       }
     }
   },
@@ -86,13 +55,18 @@ export default {
       this.turn = object.turn === 0 ? 1 : 0
       console.log(this.players[object.turn].score)
       this.players[object.turn].score += object.value
+      if (this.players[object.turn].score === 49) {
+        setTimeout(() => {
+          this.players[object.turn].score -= 15
+        }, 1500)
+      }
       this.value = object.value
     })
   },
   methods: {
     run () {
       console.log('masuk run')
-      const diceroll = 49
+      const diceroll = Math.floor(Math.random() * 6) + 1
       for (let i = 0; i < diceroll; i++) {
         this.position++
       }
@@ -107,7 +81,7 @@ export default {
       }
     },
     kocokDadu () {
-      const value = Math.floor(Math.random()*6)
+      const value = Math.floor(Math.random() * 6) + 1
       this.value = value
       this.$socket.emit('dadu', { turn: this.turn, value: this.value })
     },
