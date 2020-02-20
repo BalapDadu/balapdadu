@@ -13,6 +13,19 @@ app
 
 io.on('connection', socket => {
   console.log('a user connected')
+  socket.on('dadu', (object) => {
+    console.log('nilai '+ object.value)
+    io.emit('dadu', object)
+  })
+
+  socket.on('player', (object) => {
+    console.log(object)
+    io.emit('player', object)
+  })
+
+  socket.on('disconnect', function(){
+    console.log('user disconnected');
+  });
 })
 
 http.listen(PORT, function() {
