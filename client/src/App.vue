@@ -10,8 +10,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  /* background: url('./assets/background.gif')no-repeat center center fixed; */
+  color: white;
+  background: url('./assets/background.gif')no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

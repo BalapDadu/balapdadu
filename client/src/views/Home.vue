@@ -10,7 +10,7 @@
       <h2 v-if="value > 0">Dapat Angka : {{ value }}</h2>
       <div v-if="players != null">
         <div :key="i" v-for="(player, i) in players">
-          <img :style="{left:`${player.score}%`}" :src="`${ i === 0 ? '../img/sasuke.829bae36.gif' : 'img/itachi.e7e469e1.gif' }`" :id="`${i === 0 ? 'yoshi' : 'mario' }`">
+          <img :style="{left:`${player.score}%`}" :src="i === 0 ? imgUrl.itachi : imgUrl.sasuke " :id="i === 0 ? 'mario' : 'yoshi' ">
           <h2>Player {{ player.name }} : {{ player.score }}</h2>
           <button v-if="turn === i" @click.stop="kocokDadu">Kocok Dadu</button>
           <img v-if="player.score === 49" src="../assets/kakashi.gif" id="kakashi">
@@ -39,7 +39,11 @@ export default {
       },
       players: [],
       turn: 0,
-      value: 0
+      value: 0,
+      imgUrl: {
+        sasuke: require('@/assets/sasuke.gif'),
+        itachi: require('@/assets/itachi.gif')
+      }
     }
   },
   mounted () {
@@ -77,7 +81,7 @@ export default {
       }
     },
     kocokDadu () {
-      const value = 49
+      const value = Math.floor(Math.random() * 6) + 1
       this.value = value
       this.$socket.emit('dadu', { turn: this.turn, value: this.value })
     },
