@@ -107,7 +107,7 @@ export default {
       }
     },
     kocokDadu () {
-      const value = Math.floor(Math.random()*6)+
+      const value = Math.floor(Math.random()*6)
       this.value = value
       this.$socket.emit('dadu', { turn: this.turn, value: this.value })
     },

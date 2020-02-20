@@ -22,7 +22,13 @@ const routes = [
     path: '/testing',
     name: 'Testing',
     component: () => import('../components/DiceShake')
-  }
+  },
+  {
+    path: '/newplayer',
+    name: 'Newplayer',
+    component: () => import('../views/landingpage.vue')
+  },
+
 ]
 
 const router = new VueRouter({
