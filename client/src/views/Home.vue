@@ -2,17 +2,19 @@
   <div class="home">
     <!-- add players -->
     <div>
-      <form @submit.prevent="addPlayer">
+      <form v-if="players.length < 2" @submit.prevent="addPlayer">
+        <br>
         <input type="text" v-model="form.name">
         <button type="submit">Tambah Player</button>
       </form>
       <br>
-      <h2 v-if="value > 0">Dapat Angka : {{ value }}</h2>
+      <h4 v-if="players.length < 2" class="text-warning">Untuk memulai game harus ada 2 player!</h4>
+      <h4 v-if="value > 0">Anda dapat mendapat : {{ value }} langkah</h4>
       <div v-if="players != null">
         <div :key="i" v-for="(player, i) in players">
-          <img :style="{left:`${player.score}%`}" :src="i === 0 ? imgUrl.itachi : imgUrl.sasuke " :id="i === 0 ? 'mario' : 'yoshi' ">
-          <h2>Player {{ player.name }} : {{ player.score }}</h2>
-          <button v-if="turn === i" @click.stop="kocokDadu">Kocok Dadu</button>
+          <img :style="{left:`${player.score}%`}" :src="i === 0 ? imgUrl.itachi : imgUrl.sasuke " :id="i === 0 ? 'mario' : 'yoshi'">
+          <h4 :class="i == 0 ? 'text-primary' : 'text-danger'">Player {{ player.name }} : {{ player.score }}</h4>
+          <button v-if="turn === i && players.length === 2" @click.stop="kocokDadu">Kocok Dadu</button>
           <img v-if="player.score === 49" src="../assets/kakashi.gif" id="kakashi">
         </div>
       </div>
@@ -51,9 +53,7 @@ export default {
       this.players.push(object)
     })
     this.$socket.on('dadu', (object) => {
-      console.log(`ini score player ${object.turn} di mounted : ` + this.players[object.turn].score)
       this.turn = object.turn === 0 ? 1 : 0
-      console.log(this.players[object.turn].score)
       this.players[object.turn].score += object.value
       if (this.players[object.turn].score === 49) {
         setTimeout(() => {
@@ -87,6 +87,7 @@ export default {
     },
     addPlayer () {
       this.$socket.emit('player', { ...this.form })
+      this.form.name = ''
     }
   }
 }
