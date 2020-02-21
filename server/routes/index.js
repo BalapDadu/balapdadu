@@ -3,7 +3,7 @@ const { User, Room, RoomActive } = require('../models')
 
 // User registration
 router.post('/users', (req, res, next) => {
-  const username = req.body.username
+  const username = { name: req.body.username }
   User.create(username)
     .then(result => {
       res.status(201).json(result)
@@ -14,7 +14,7 @@ router.post('/users', (req, res, next) => {
 })
 
 router.get('/rooms', (req, res, next) => {
-  User.findAll({ include: RoomActive })
+  Room.findAll({ include: RoomActive })
     .then(results => {
       res.status(200).json(results)
     })
@@ -25,20 +25,22 @@ router.get('/rooms', (req, res, next) => {
 
 router.post('/rooms', (req, res, next) => {
   const room = {
-    name: req.body.roomname
+    name: req.body.name
   }
-  Room.create(roomname)
+  Room.create(room)
     .then(result => {
       const data = {
         UserId: req.body.UserId,
         RoomId: result.id
       }
-      return RoomActive.create()
+      return RoomActive.create(data)
     })
     .then(final => {
-      res.status(200).json(result)
+        console.log(final)
+      res.status(200).json(final)
     })
     .catch(err => {
+      console.log(err)
       res.status(500).json({ err, message: 'server error' })
     })
 })
@@ -56,3 +58,5 @@ router.post('/rooms/join', (req, res, next) => {
       res.status(500).json(err)
     })
 })
+
+module.exports = router
