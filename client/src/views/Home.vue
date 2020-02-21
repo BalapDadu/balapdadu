@@ -8,7 +8,7 @@
         <button type="submit">Tambah Player</button>
       </form>
       <br> -->
-      <h4 v-if="players.length < 2" class="text-warning">Untuk memulai game harus ada 2 player! {{ $route.params.userId }}</h4>
+      <h4 v-if="players.length < 2" class="text-warning">Untuk memulai game harus ada 2 player!</h4>
       <h4 v-if="value > 0">Anda dapat mendapat : {{ value }} langkah</h4>
       <div v-if="players != null">
         <div :key="i" v-for="(player, i) in players">
@@ -88,7 +88,7 @@ export default {
     kocokDadu (id) {
       const value = Math.floor(Math.random() * 6) + 1
       this.value = value
-      this.$socket.emit('dadu', { turn: this.turn, value: this.value, plyaerId: id })
+      this.$socket.emit('dadu', { turn: this.turn, value: this.value, playerId: id })
     },
     getPlayer() {
       axios
@@ -100,7 +100,10 @@ export default {
             this.form.name = user.name
             dataUser.push({ ...this.form })
           })
-          this.$socket.emit('player', dataUser)
+          this.$socket.emit('player', {
+            user: dataUser,
+            id: this.$route.params.roomId
+          })
         })
         .catch(({ response }) => {
           console.log(response)

@@ -20,10 +20,7 @@ io.on('connection', socket => {
   })
   socket.on('player', object => {
     console.log(object)
-    io.emit('player', object)
-  })
-  socket.on('disconnect', function() {
-    console.log('user disconnected')
+    io.sockets.to(object.id).emit('player', object.user)
   })
   socket.on('ambil-room', () => {
     io.emit('fetch-room')
@@ -32,7 +29,12 @@ io.on('connection', socket => {
     io.emit('fetch-room')
   })
   socket.on('join-room', payload => {
+    console.log(payload)
+    socket.join(payload)
     io.emit('fetch-room')
+  })
+  socket.on('disconnect', function() {
+    console.log('user disconnected')
   })
 })
 
