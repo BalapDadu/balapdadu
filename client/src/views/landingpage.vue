@@ -1,29 +1,47 @@
 <template>
   <div class="home">
-  <div>
-    <h1>
-  <span>N</span>
-  <span>I</span>
-  <span>N</span>
-  <span>J</span>
-  <span>A</span>
-  <br>
-  <span>R</span>
-  <span>U</span>
-  <span>N</span>
-    </h1>
-        <img src="../assets/unnamed.gif" alt="">
-  </div>
-  <div class="d-flex justify-content-center">
-    <form class="form">
-  <div class="form-group mx-sm-3 mb-2">
-    <input type="password" class="form-control transparent-input" id="inputPassword2" placeholder="Input Nickname">
-  </div>
-  <button  class="btn btn-outline-dark mb-2"><span><i type="submit" class="fa fa-arrows-alt" style="font-size:38px;color:red"></i></span></button>
-  <a></a>
-</form>
-    <img class="image-banner" src="../assets/Brown-Banner-PNG-Background-Image.png" alt="">
-  </div>
+    <div>
+      <h1>
+        <span>N</span>
+        <span>I</span>
+        <span>N</span>
+        <span>J</span>
+        <span>A</span>
+        <br />
+        <span>R</span>
+        <span>U</span>
+        <span>N</span>
+      </h1>
+      <img src="../assets/unnamed.gif" alt="" />
+    </div>
+    <div class="d-flex justify-content-center">
+      <form class="form">
+        <div class="form-group mx-sm-3 mb-2">
+          <input
+            type="text"
+            class="form-control transparent-input"
+            id="inputPassword2"
+            placeholder="Input Nickname"
+            v-model="username"
+          />
+        </div>
+        <button class="btn btn-outline-dark mb-2" @click.prevent="createPlayer">
+          <span
+            ><i
+              type="submit"
+              class="fa fa-arrows-alt"
+              style="font-size:38px;color:red"
+            ></i
+          ></span>
+        </button>
+        <a></a>
+      </form>
+      <img
+        class="image-banner"
+        src="../assets/Brown-Banner-PNG-Background-Image.png"
+        alt=""
+      />
+    </div>
   </div>
 </template>
 
@@ -32,31 +50,45 @@
 
 export default {
   name: 'Home',
-  components: {
+  data() {
+    return {
+      username: null
+    }
+  },
+  components: {},
+  methods: {
+    createPlayer() {
+      localStorage.setItem('username', this.username)
+      setTimeout(() => {
+        this.$router.push('/room')
+      }, 1000)
+    }
   }
 }
 </script>
 <style scoped>
-
-  .home{
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    background-image: url('../assets/pixel-gif-background-12.gif');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  img{
-    margin-top: 15vh;
-    margin-bottom: -10vh
-  }
-  .image-banner{
-    position: absolute;
-    height: 150px;
-  }
+input {
+  color: white !important;
+}
+.home {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-image: url('../assets/pixel-gif-background-12.gif');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+img {
+  margin-top: 15vh;
+  margin-bottom: -10vh;
+}
+.image-banner {
+  position: absolute;
+  height: 150px;
+}
 h1 {
   cursor: default;
   position: absolute;
@@ -136,10 +168,10 @@ h1 span:nth-child(13) {
 h1 span:nth-child(14) {
   -webkit-animation-delay: 0.8s;
 }
-input.transparent-input{
-      background-color:rgba(0,0,0,0) !important;
-      border: 2px solid rgb(223, 223, 223);
-   }
+input.transparent-input {
+  background-color: rgba(0, 0, 0, 0) !important;
+  border: 2px solid rgb(223, 223, 223);
+}
 form {
   position: absolute;
   z-index: 6;
@@ -154,5 +186,4 @@ form {
       0 50px 25px rgba(0, 0, 0, 0.2);
   }
 }
-
 </style>

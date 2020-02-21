@@ -1,14 +1,20 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import LobbyRoom from '@/views/LobbyRoom'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/game',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/lobby',
+    name: 'lobby',
+    component: LobbyRoom
   },
   {
     path: '/about',
@@ -24,7 +30,7 @@ const routes = [
     component: () => import('../components/DiceShake')
   },
   {
-    path: '/newplayer',
+    path: '/',
     name: 'Newplayer',
     component: () => import('../views/landingpage.vue')
   },
