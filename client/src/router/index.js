@@ -28,7 +28,11 @@ const routes = [
     name: 'Newplayer',
     component: () => import('../views/landingpage.vue')
   },
-
+  {
+    path: '/room',
+    name: 'Room',
+    component: () => import('../views/room.vue')
+  }
 ]
 
 const router = new VueRouter({
