@@ -3,12 +3,13 @@
     <div class="card-body">
       <h5 class="card-title">{{ room.name }}</h5>
       <p class="card-text">Players: {{ room.RoomActives.length }}/2</p>
-      <a class="btn btn-danger" @click.prevent="joinRoom(room)"
+      <a v-if="room.RoomActives.length < 2" class="btn btn-danger" @click.prevent="joinRoom(room)"
         ><span>
           <i class="fas fa-fan"></i>
         </span>
         JOIN
       </a>
+      <p v-else class="text-center text-danger">Room Full!</p>
     </div>
   </div>
 </template>
