@@ -29,7 +29,7 @@ export default {
       axios
         .post(`${this.$store.state.BASE_URL}/rooms/join`, form)
         .then(({ data }) => {
-          this.$socket.emit('join-room')
+          this.$socket.emit('join-room', room.id)
           this.$router.push({ name: 'Game', params: { roomId: data.RoomId, userId: localStorage.id } })
           this.joinName = null
         })

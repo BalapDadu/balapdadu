@@ -62,9 +62,8 @@ export default {
         .post(`${this.$store.state.BASE_URL}/rooms`, form)
         .then(({ data }) => {
           this.roomName = null
-          console.log(data.RoomId)
+          this.$socket.emit('join-room', data.RoomId)
           this.$router.push({ name: 'Game', params: { roomId: data.RoomId, userId: localStorage.id } })
-          console.log(data)
           this.$socket.emit('create-room')
         })
         .catch(({ response }) => {
