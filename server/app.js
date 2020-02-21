@@ -6,19 +6,6 @@ const cors = require('cors')
 const io = require('socket.io')(http)
 const routes = require('./routes')
 
-const rooms = [
-  {
-    name: 'Berdedikasi',
-    turn: 0,
-    players: []
-  },
-  {
-    name: 'Bersenyawa',
-    turn: 0,
-    players: []
-  }
-]
-
 app
   .use(cors())
   .use(express.json())
@@ -37,7 +24,9 @@ io.on('connection', socket => {
   socket.on('disconnect', function() {
     console.log('user disconnected')
   })
-  io.emit('fetch-room', rooms)
+  socket.on('ambil-room', () => {
+    io.emit('fetch-room')
+  })
   socket.on('create-room', payload => {
     let newRoom = {
       name: payload.name,

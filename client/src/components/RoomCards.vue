@@ -1,17 +1,14 @@
 <template>
-  <div>
-    <div class="card">
-      <div class="card-body">
-        <div class="card-title">
-          <h3>{{ room.name }}</h3>
-        </div>
-        <div class="card-subtitle">Players: {{ room.players.length }}/2</div>
-
-        <a href="#" class="card-link" @click.prevent="joinRoom(room.name)"
-          v-if="room.players.length < 2">Join Room</a
-        >
-        <h6 v-else>Room Full</h6>
-      </div>
+  <div class="card text-center" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">{{ room.name }}</h5>
+      <p class="card-text">Players: {{ room.players.length }}/2</p>
+      <a class="btn btn-danger" @click.prevent="joinRoom(room.name)"
+        ><span>
+          <i class="fas fa-fan"></i>
+        </span>
+        JOIN
+      </a>
     </div>
   </div>
 </template>
@@ -30,6 +27,7 @@ export default {
         console.log(rooms)
         this.roomList = rooms
       })
+      this.$router.push('/game')
       this.joinName = null
     }
   }
@@ -37,20 +35,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.card-1 {
-  border: 2px solid black;
-  display: flex;
-  justify-content: space-evenly;
-  width: 80%;
-  height: 150px;
-}
-.card-1 h2 {
-  margin-bottom: 15px;
-}
-.card-1 a {
-  width: 100px;
-  padding: 15px;
-  background: grey;
-  color: white;
+.card {
+  color: black;
+  background-color: antiquewhite;
+  border-radius: 10px;
 }
 </style>

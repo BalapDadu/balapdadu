@@ -7,7 +7,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/game',
     name: 'Home',
     component: Home
   },
@@ -30,7 +30,7 @@ const routes = [
     component: () => import('../components/DiceShake')
   },
   {
-    path: '/newplayer',
+    path: '/',
     name: 'Newplayer',
     component: () => import('../views/landingpage.vue')
   },
