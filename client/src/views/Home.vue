@@ -14,7 +14,7 @@
         <div :key="i" v-for="(player, i) in players">
           <img :style="{left:`${player.score}%`}" :src="i === 0 ? imgUrl.itachi : imgUrl.sasuke " :id="i === 0 ? 'mario' : 'yoshi'">
           <h4 :class="i == 0 ? 'text-primary' : 'text-danger'">Player {{ player.name }} : {{ player.score }}</h4>
-          <button v-if="turn === i && players.length === 2 && player.id == $route.params.userId" @click.stop="kocokDadu">Kocok Dadu</button>
+          <button class="btn btn-dark" v-if="turn === i && players.length === 2 && player.id == $route.params.userId" @click.stop="kocokDadu">Kocok Dadu</button>
           <img v-if="player.score === 49" src="../assets/kakashi.gif" id="kakashi">
           <img v-if="player.score === 3" src="../assets/mana.gif" id="mana">
           <img v-if="player.score === 5" src="../assets/lightning.gif" id="lightning">
@@ -35,6 +35,7 @@
 <script>
 // @ is an alias to /src
 import axios from 'axios'
+import swal from 'sweetalert2'
 
 export default {
   name: 'Home',
@@ -66,6 +67,10 @@ export default {
     this.$socket.on('dadu', (object) => {
       this.turn = object.turn === 0 ? 1 : 0
       this.players[object.turn].score += object.value
+
+      if (this.players[object.turn].score >= 85) {
+        swal.fire(`Players ${object.turn} wins!`)
+      }
 
       if (this.players[object.turn].score === 49) {
         setTimeout(() => {
@@ -125,7 +130,7 @@ export default {
       }
     },
     kocokDadu (id) {
-      const value = 23
+      const value = Math.floor(Math.random() * 6) + 1
       this.value = value
       this.$socket.emit('dadu', { turn: this.turn, value: this.value, playerId: id })
     },
@@ -152,6 +157,10 @@ export default {
     //   this.$socket.emit('player', { ...this.form })
     //   this.form.name = ''
     // }
+  },
+  created () {
+    const bgmusic = new Audio(require('../assets/bgsound.mp3'))
+    bgmusic.play()
   }
 }
 </script>
