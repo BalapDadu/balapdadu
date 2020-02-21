@@ -16,6 +16,12 @@
           <h4 :class="i == 0 ? 'text-primary' : 'text-danger'">Player {{ player.name }} : {{ player.score }}</h4>
           <button v-if="turn === i && players.length === 2 && player.id == $route.params.userId" @click.stop="kocokDadu">Kocok Dadu</button>
           <img v-if="player.score === 49" src="../assets/kakashi.gif" id="kakashi">
+          <img v-if="player.score === 3" src="../assets/mana.gif" id="mana">
+          <img v-if="player.score === 5" src="../assets/lightning.gif" id="lightning">
+          <img v-if="player.score === 9" src="../assets/ramen.gif" id="ramen">
+          <img v-if="player.score === 23" src="../assets/sakura.gif" id="sakura">
+          <img v-if="player.score === 78" src="../assets/rasenshuriken.gif" id="rasenshuriken">
+          <img v-if="player.score === 40" src="../assets/orochimaru.gif" id="orochimaru">
         </div>
       </div>
   </div>
@@ -60,11 +66,49 @@ export default {
     this.$socket.on('dadu', (object) => {
       this.turn = object.turn === 0 ? 1 : 0
       this.players[object.turn].score += object.value
+
       if (this.players[object.turn].score === 49) {
         setTimeout(() => {
           this.players[object.turn].score -= 15
         }, 1500)
       }
+
+      if (this.players[object.turn].score === 3) {
+        setTimeout(() => {
+          this.players[object.turn].score += 15
+        }, 1000)
+      }
+
+      if (this.players[object.turn].score === 5) {
+        setTimeout(() => {
+          this.players[object.turn].score += 20
+        }, 1000)
+      }
+
+      if (this.players[object.turn].score === 23) {
+        setTimeout(() => {
+          this.players[object.turn].score += 57
+        }, 1200)
+      }
+
+      if (this.players[object.turn].score === 9) {
+        setTimeout(() => {
+          this.players[object.turn].score += 44
+        }, 1000)
+      }
+
+      if (this.players[object.turn].score === 40) {
+        setTimeout(() => {
+          this.players[object.turn].score -= 32
+        }, 1750)
+      }
+
+      if (this.players[object.turn].score === 78) {
+        setTimeout(() => {
+          this.players[object.turn].score -= 50
+        }, 1650)
+      }
+
       this.value = object.value
     })
   },
@@ -79,14 +123,9 @@ export default {
       if (this.position > 85) {
         alert('win!')
       }
-      if (this.position === 49) {
-        setTimeout(() => {
-          this.position -= 15
-        }, 2500)
-      }
     },
     kocokDadu (id) {
-      const value = Math.floor(Math.random() * 6) + 1
+      const value = 23
       this.value = value
       this.$socket.emit('dadu', { turn: this.turn, value: this.value, playerId: id })
     },
@@ -146,11 +185,51 @@ export default {
   left : 55%;
   z-index : 2;
 }
-#smoke{
+#mana{
   height: 180px;
   position: absolute;
   bottom : 7rem;
-  left : 55%;
+  left : 3%;
+  z-index : 3;
+}
+
+#lightning{
+  height: 180px;
+  position: absolute;
+  bottom : 7rem;
+  left : 5%;
+  z-index : 3;
+}
+
+#ramen{
+  height: 50px;
+  position: absolute;
+  bottom : 12rem;
+  left : 15%;
+  z-index : 3;
+}
+
+#sakura{
+  height: 350px;
+  position: absolute;
+  bottom : 7rem;
+  left : 23%;
+  z-index : 3;
+}
+
+#rasenshuriken{
+  height: 610px;
+  position: absolute;
+  bottom : 6rem;
+  left : 58%;
+  z-index : 3;
+}
+
+#orochimaru{
+  height: 410px;
+  position: absolute;
+  bottom : 5rem;
+  left : 40%;
   z-index : 3;
 }
 </style>
