@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 // @ is an alias to /src
 
 export default {
@@ -58,10 +59,22 @@ export default {
   components: {},
   methods: {
     createPlayer() {
-      localStorage.setItem('username', this.username)
-      setTimeout(() => {
-        this.$router.push('/room')
-      }, 1000)
+      const form = {
+        username: this.username
+      }
+      axios
+        .post(`${this.$store.state.BASE_URL}/users`, form)
+        .then(({ data }) => {
+          console.log(data)
+          localStorage.setItem('id', data.id)
+          localStorage.setItem('username', data.name)
+          setTimeout(() => {
+            this.$router.push('/room')
+          }, 500)
+        })
+        .catch(({ response }) => {
+          console.log(response)
+        })
     }
   }
 }

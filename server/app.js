@@ -10,6 +10,7 @@ app
   .use(cors())
   .use(express.json())
   .use(express.urlencoded({ extended: true }))
+  .use('/', routes)
 
 io.on('connection', socket => {
   console.log('a user connected')
@@ -27,30 +28,11 @@ io.on('connection', socket => {
   socket.on('ambil-room', () => {
     io.emit('fetch-room')
   })
-  socket.on('create-room', payload => {
-    let newRoom = {
-      name: payload.name,
-      turn: 0,
-      players: [payload.username]
-    }
-    console.log('a new room created')
-    rooms.push(newRoom)
-    socket.join(newRoom.name)
-    io.emit('fetch-room', rooms)
+  socket.on('create-room', () => {
+    io.emit('fetch-room')
   })
   socket.on('join-room', payload => {
-    const index = rooms.findIndex(room => room.name === payload.name)
-    console.log(index)
-    if (index === -1) {
-      socket.emit('doesnt-exist', 'Room doesnt exist')
-    } else if (rooms[index].players.length < 2) {
-      rooms[index].players.push(payload.username)
-      socket.join(payload.name)
-      io.emit('fetch-room', rooms)
-      socket.emit('game-start', rooms[index])
-    } else {
-      socket.emit('full-room', 'Room already have 2 players')
-    }
+    io.emit('fetch-room')
   })
 })
 

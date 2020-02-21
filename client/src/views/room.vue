@@ -35,6 +35,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 import RoomCards from '@/components/RoomCards'
 
 export default {
@@ -52,36 +54,48 @@ export default {
   },
   methods: {
     createRoom() {
-      this.$socket.emit('create-room', {
+      const form = {
         name: this.roomName,
-        username: localStorage.getItem('username')
-      })
-      this.$socket.on('fetch-rooms', rooms => {
-        this.roomList = rooms
-      })
-      this.roomName = null
-    },
-    createUsername() {
-      if (localStorage.getItem('username')) {
-        alert('Username exist')
-      } else {
-        this.gameStart = true
-        localStorage.setItem('username', this.username)
+        UserId: localStorage.getItem('id')
       }
+      axios
+        .post(`${this.$store.state.BASE_URL}/rooms`, form)
+        .then(({ data }) => {
+          this.roomName = null
+          console.log('BERHASIL GAES')
+          this.$socket.emit('create-room')
+        })
+        .catch(({ response }) => {
+          console.log(response)
+        })
     }
   },
   mounted() {
     this.$socket.emit('ambil-room')
     this.$socket.on('fetch-room', rooms => {
       console.log('MASHOOOK GAN')
-      this.roomList = rooms
+      axios
+        .get(`${this.$store.state.BASE_URL}/rooms`)
+        .then(({ data }) => {
+          this.roomList = data
+        })
+        .catch(({ response }) => {
+          console.log(response)
+        })
     })
   },
   created() {
     this.$socket.emit('ambil-room')
     this.$socket.on('fetch-room', rooms => {
       console.log('MASHOOOK GAN')
-      this.roomList = rooms
+      axios
+        .get(`${this.$store.state.BASE_URL}/rooms`)
+        .then(({ data }) => {
+          this.roomList = data
+        })
+        .catch(({ response }) => {
+          console.log(response)
+        })
     })
   },
   beforeRouteEnter(to, from, next) {
