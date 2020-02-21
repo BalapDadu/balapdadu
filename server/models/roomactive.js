@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   )
   RoomActive.associate = function(models) {
     // associations can be defined here
+    RoomActive.belongsTo(models.User)
     RoomActive.belongsTo(models.Room)
   }
   return RoomActive

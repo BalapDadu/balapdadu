@@ -3,7 +3,7 @@
     <div class="card-body">
       <h5 class="card-title">{{ room.name }}</h5>
       <p class="card-text">Players: {{ room.RoomActives.length }}/2</p>
-      <a class="btn btn-danger" @click.prevent="joinRoom(room.name)"
+      <a class="btn btn-danger" @click.prevent="joinRoom(room)"
         ><span>
           <i class="fas fa-fan"></i>
         </span>
@@ -22,13 +22,14 @@ export default {
   methods: {
     joinRoom(room) {
       const form = {
-        name: room
+        RoomId: room.id,
+        UserId: localStorage.id
       }
       axios
         .post(`${this.$store.state.BASE_URL}/rooms/join`, form)
         .then(({ data }) => {
           this.$socket.emit('join-room')
-          this.$router.push('/game')
+          this.$router.push({ name: 'Game', params: { roomId: data.RoomId, userId: localStorage.id } })
           this.joinName = null
         })
         .catch(({ response }) => {

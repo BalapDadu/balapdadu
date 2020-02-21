@@ -2,19 +2,19 @@
   <div class="home">
     <!-- add players -->
     <div>
-      <form v-if="players.length < 2" @submit.prevent="addPlayer">
+      <!-- <form v-if="players.length < 2" @submit.prevent="addPlayer">
         <br>
         <input type="text" v-model="form.name">
         <button type="submit">Tambah Player</button>
       </form>
-      <br>
-      <h4 v-if="players.length < 2" class="text-warning">Untuk memulai game harus ada 2 player!</h4>
+      <br> -->
+      <h4 v-if="players.length < 2" class="text-warning">Untuk memulai game harus ada 2 player! {{ $route.params.userId }}</h4>
       <h4 v-if="value > 0">Anda dapat mendapat : {{ value }} langkah</h4>
       <div v-if="players != null">
         <div :key="i" v-for="(player, i) in players">
           <img :style="{left:`${player.score}%`}" :src="i === 0 ? imgUrl.itachi : imgUrl.sasuke " :id="i === 0 ? 'mario' : 'yoshi'">
           <h4 :class="i == 0 ? 'text-primary' : 'text-danger'">Player {{ player.name }} : {{ player.score }}</h4>
-          <button v-if="turn === i && players.length === 2" @click.stop="kocokDadu">Kocok Dadu</button>
+          <button v-if="turn === i && players.length === 2 && player.id == $route.params.userId" @click.stop="kocokDadu">Kocok Dadu</button>
           <img v-if="player.score === 49" src="../assets/kakashi.gif" id="kakashi">
         </div>
       </div>
@@ -28,6 +28,7 @@
 
 <script>
 // @ is an alias to /src
+import axios from 'axios'
 
 export default {
   name: 'Home',
@@ -36,10 +37,12 @@ export default {
   data () {
     return {
       form: {
+        id: '',
         name: '',
         score: 0
       },
       players: [],
+      played: 0,
       turn: 0,
       value: 0,
       imgUrl: {
@@ -49,8 +52,10 @@ export default {
     }
   },
   mounted () {
+    // this.$socket.emit('detail-room')
+    this.getPlayer()
     this.$socket.on('player', (object) => {
-      this.players.push(object)
+      this.players = object
     })
     this.$socket.on('dadu', (object) => {
       this.turn = object.turn === 0 ? 1 : 0
@@ -80,15 +85,31 @@ export default {
         }, 2500)
       }
     },
-    kocokDadu () {
+    kocokDadu (id) {
       const value = Math.floor(Math.random() * 6) + 1
       this.value = value
-      this.$socket.emit('dadu', { turn: this.turn, value: this.value })
+      this.$socket.emit('dadu', { turn: this.turn, value: this.value, plyaerId: id })
     },
-    addPlayer () {
-      this.$socket.emit('player', { ...this.form })
-      this.form.name = ''
+    getPlayer() {
+      axios
+        .get(`${this.$store.state.BASE_URL}/game/${this.$route.params.roomId}`)
+        .then(({ data }) => {
+          const dataUser = []
+          data.map(user => {
+            this.form.id = user.id
+            this.form.name = user.name
+            dataUser.push({ ...this.form })
+          })
+          this.$socket.emit('player', dataUser)
+        })
+        .catch(({ response }) => {
+          console.log(response)
+        })
     }
+    // addPlayer () {
+    //   this.$socket.emit('player', { ...this.form })
+    //   this.form.name = ''
+    // }
   }
 }
 </script>

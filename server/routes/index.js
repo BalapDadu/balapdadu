@@ -46,16 +46,32 @@ router.post('/rooms', (req, res, next) => {
 })
 
 router.post('/rooms/join', (req, res, next) => {
-  RoomActive.findAll({ where: { RoomId: req.body.RoomId } }).then(result => {
-    if (result.length > 2) {
-    }
-  })
   RoomActive.create({ UserId: req.body.UserId, RoomId: req.body.RoomId })
     .then(results => {
       res.status(201).json(results)
     })
     .catch(err => {
       res.status(500).json(err)
+    })
+})
+
+router.get('/game/:room_id', (req, res, next) => {
+  User
+    .findAll({
+      include : {
+        model : RoomActive,
+        where : {
+          RoomId : req.params.room_id
+        },
+      },
+
+    })
+    .then(response => {
+      console.log(response)
+      res.status(200).json(response)
+    })
+    .catch(err => {
+      res.status(500).json({ err, message : 'server error' })
     })
 })
 
