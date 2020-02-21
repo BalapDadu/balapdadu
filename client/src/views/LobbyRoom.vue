@@ -6,14 +6,11 @@
     </div>
     <input type="text" v-model="roomName" />
     <a href="#" @click.prevent="createRoom">Create Room</a>
-    <div class="room">
-      <h4>Ini contoh room :</h4>
+    <div class="room container">
       <div v-for="(room, i) in roomList" :key="i">
         <RoomCards :room="room" />
       </div>
     </div>
-    <input type="text" v-model="joinName" />
-    <a href="#" @click.prevent="joinRoom">Join Room</a>
   </div>
 </template>
 

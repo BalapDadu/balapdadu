@@ -1,11 +1,17 @@
 <template>
   <div>
-    <div class="card-1">
-      <h2>{{ room.name }}</h2>
-      <div id="members" v-for="(member, i) in room.players" :key="i">
-        <h4>{{ member }}</h4>
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title">
+          <h3>{{ room.name }}</h3>
+        </div>
+        <div class="card-subtitle">Players: {{ room.players.length }}/2</div>
+
+        <a href="#" class="card-link" @click.prevent="joinRoom(room.name)"
+          v-if="room.players.length < 2">Join Room</a
+        >
+        <h6 v-else>Room Full</h6>
       </div>
-      <a href="#" @click.prevent="joinRoom(room.name)">Join Room</a>
     </div>
   </div>
 </template>
