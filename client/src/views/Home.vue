@@ -9,12 +9,13 @@
       </form>
       <br>
       <h4 v-if="players.length < 2" class="text-warning">Untuk memulai game harus ada 2 player!</h4>
-      <h4 v-if="value > 0">Anda dapat mendapat : {{ value }} langkah</h4>
+      <h4 v-if="value > 0">{{players[turn].name}} dapat mendapat : {{ value }} langkah</h4>
       <div v-if="players != null">
         <div :key="i" v-for="(player, i) in players">
           <img :style="{left:`${player.score}%`}" :src="i === 0 ? imgUrl.itachi : imgUrl.sasuke " :id="i === 0 ? 'mario' : 'yoshi'">
-          <h4 :class="i == 0 ? 'text-primary' : 'text-danger'">Player {{ player.name }} : {{ player.score }}</h4>
-          <button v-if="turn === i && players.length === 2" @click.stop="kocokDadu">Kocok Dadu</button>
+         <button :class="`${i == 0 ? 'text-primary' : 'text-danger'} score`">Player {{ player.name }} : {{ player.score }}</button>
+          <img class="dice" src="../assets/dice.gif" v-if="turn === i && players.length === 2" @click.stop="kocokDadu">
+          <!-- <button v-if="turn === i && players.length === 2" @click.stop="kocokDadu">Kocok Dadu</button> -->
           <img v-if="player.score === 49" src="../assets/kakashi.gif" id="kakashi">
         </div>
       </div>
@@ -47,6 +48,10 @@ export default {
         itachi: require('@/assets/itachi.gif')
       }
     }
+  },
+  created () {
+    const audio = new Audio(backsound)
+    audio.play()
   },
   mounted () {
     this.$socket.on('player', (object) => {
@@ -128,5 +133,21 @@ export default {
   bottom : 7rem;
   left : 55%;
   z-index : 3;
+}
+.text-danger{
+  position: absolute;
+  font-size: 10px;
+  z-index: 4;
+}
+.text-primary{
+  position: absolute;
+  z-index: 4;
+}
+.dice{
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  margin-left: -147px;
+  height: 30vh;
 }
 </style>
